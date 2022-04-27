@@ -29,9 +29,9 @@ def handle_on_answer():
     request_data = request.form.to_dict()
 
     caller = request_data.get("from", "[unknown]")
-    callee_name = request_data.get("user", "[unknown]")
+    callee_number = request_data.get("to", "[unknown]")
 
-    print("{} answered call from {}".format(callee_name, caller))
+    print("{} answered call from {}".format(callee_number, caller))
 
     return "This response will be discarded", 200
 
