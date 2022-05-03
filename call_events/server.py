@@ -1,7 +1,7 @@
 import flask
 import xml.etree.ElementTree as ET
 
-BASE_URL = "[YOUR_SERVERS_ADDRESS]'
+BASE_URL = "[YOUR_SERVERS_ADDRESS]"
 
 ON_ANSWER_URL = BASE_URL + "/on-answer"
 ON_HANGUP_URL = BASE_URL + "/on-hangup"
