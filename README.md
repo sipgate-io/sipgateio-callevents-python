@@ -78,7 +78,9 @@ You can configure webhooks for sipgate.io as follows:
 1. Navigate to [console.sipgate.com](https://console.sipgate.com/) and login with your sipgate account credentials.
 2. Select the **Webhooks**&nbsp;>&nbsp;**URLs** tab in the left side menu
 3. Click the gear icon of the **Incoming** or **Outgoing** entry
-4. Fill in your webhook URL and click save. **Note:** your webhook URL has to be accessible from the internet. (See the section [Making your computer accessible from the internet](#making-your-computer-accessible-from-the-internet)) 
+4. Fill in your webhook URL and click save. \
+**Note:** your webhook URL has to be accessible from the internet. (See the section [Making your computer accessible from the internet](#making-your-computer-accessible-from-the-internet))\
+**Example:** Assuming your server's address was `example.localhost.run`, the address you'd need to set in the webhook console would be `https://example.localhost.run/new-call`.
 5. In the **sources** section you can select what phonelines and groups should trigger webhooks.
 
 ## A word on security
@@ -120,14 +122,14 @@ $ pip3 install -r requirements.txt
 ```
 
 ## Configuration
+Create the `.env` by copying the [`.env.example`](.env.example) and set the values according to the comment above the variables.
 
-In the `server.py` the `ON_ANSWER_URL` and `ON_HANGUP_URL` is set to the `BASE_URL` followed by a suffix depending on the event type.
-The `BASE_URL` is the URL under which your server is accessible from the internet (i.e. the URL you set up in the webhooks console minus the "`/new-call`" portion).
+The `WEBHOOK_URL` is the URL under which your server is accessible from the internet (i.e. the URL you set up in the webhooks console minus the "`/new-call`" portion) (See [Configure webhooks for sipgate.io](#configure-webhooks-for-sipgateio)).
+
+In the `server.py` the `ON_ANSWER_URL` and `ON_HANGUP_URL` is set to the `WEBHOOK_URL` followed by a suffix depending on the event type.
 ```python
-BASE_URL = "[YOUR_SERVERS_ADDRESS]"
-
-ON_ANSWER_URL = BASE_URL + "/on-answer"
-ON_HANGUP_URL = BASE_URL + "/on-hangup"
+ON_ANSWER_URL = WEBHOOK_URL + "/on-answer"
+ON_HANGUP_URL = WEBHOOK_URL + "/on-hangup"
 ```
 
 ## Execution
@@ -139,18 +141,21 @@ python -m call_events
 ## How It Works
 
 In the `__main__.py`, which is a starting point of the application, we import the `server` module from our file `server.py` on the same directory.
-The library _logging_ is imported to reduce the log report of the _Flask_ framework to only print errors. The `server` module contains a _Flask_ application called `app`, which is started by calling its `run()` method with the desired port `8080`.  
+The library _logging_ is imported to reduce the log report of the _Flask_ framework to only print errors. The `server` module contains a _Flask_ application called `app`, which is started by calling its `run()` method with the desired port.  
 
 ```python
 import call_events.server as server
 import logging
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 if __name__ == "__main__":
     log = logging.getLogger('werkzeug')
     log.setLevel(logging.ERROR)
 
-    server.app.run(port=8080)
+    server.app.run(port=int(os.environ.get("WEBHOOK_PORT")))
 ```
 The application's behavior is defined in the `server.py` script.
 

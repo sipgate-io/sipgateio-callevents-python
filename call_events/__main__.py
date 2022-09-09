@@ -9,4 +9,4 @@ if __name__ == "__main__":
     log = logging.getLogger('werkzeug')
     log.setLevel(logging.ERROR)
 
-    server.app.run(port=int(os.environ.get("WEBHOOK_PORT")),debug=True)
+    server.app.run(port=int(os.environ.get("WEBHOOK_PORT")))
