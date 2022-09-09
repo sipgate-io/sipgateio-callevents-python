@@ -1,10 +1,14 @@
 import flask
 import xml.etree.ElementTree as ET
+from dotenv import load_dotenv
+import os
 
-BASE_URL = "[YOUR_SERVERS_ADDRESS]"
+load_dotenv()
 
-ON_ANSWER_URL = BASE_URL + "/on-answer"
-ON_HANGUP_URL = BASE_URL + "/on-hangup"
+WEBHOOK_URL = os.environ.get("WEBHOOK_URL")
+
+ON_ANSWER_URL = WEBHOOK_URL + "/on-answer"
+ON_HANGUP_URL = WEBHOOK_URL + "/on-hangup"
 
 app = flask.Flask(__name__)
 
